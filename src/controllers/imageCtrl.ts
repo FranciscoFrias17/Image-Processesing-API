@@ -26,9 +26,9 @@ const ImageCtrl = {
     },
 
     imageCreate: async (req: Request, res: Response) => {
-        const imageName = req.query.filename as string
-        const width = req.query.width as unknown as number
-        const height = req.query.height as unknown as number
+        const imageName = req.params.id
+        const width = req.query.width ? parseInt(req.query.width as string) : 0
+        const height = req.query.height ? parseInt(req.query.height as string) : 0
 
         const editPath = `./images/${imageName}-${width}x${height}`
         const editedImage = await ImageService.resizeImage(editPath, imageName, width, height)
