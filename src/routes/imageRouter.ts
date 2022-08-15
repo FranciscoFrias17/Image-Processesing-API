@@ -7,6 +7,6 @@ router.get('/', ImageCtrl.imageGetAll)
 
 router.get('/:id', ImageCtrl.imageGetOne)
 
-router.get('/create/:filename', ImageCtrl.imageCreate)
+router.get('/create/:id', ImageCtrl.imageCreate)
 
 export default router

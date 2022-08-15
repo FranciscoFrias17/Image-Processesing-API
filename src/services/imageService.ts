@@ -3,13 +3,14 @@ import path from 'path'
 
 /* Service resizes the images */
 export class ImageService {
-    async changeImage(filename: string, width: number, height: number): Promise<OutputInfo | undefined> {
-        const filePath = path.resolve(`../images/${filename}`)
-        const newFilePath = path.resolve(`../images/${filename}-${width}-${height}.jpg`)
-
-        const image = await sharp(filePath).resize(width, height).toFile(newFilePath)
-
-        return image
+    async resizeImage(editPath: string, imageName: string, width: number, height: number) {
+        try {
+            const editedImage = await sharp(`../images/${imageName}`).resize(width, height).toFile(editPath)
+            return editedImage
+        } catch (error) {
+            // eslint-disable-next-line no-console, no-undef
+            console.log(error)
+        }
     }
 }
 

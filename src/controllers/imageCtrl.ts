@@ -1,8 +1,6 @@
 import { Request, Response } from 'express'
 import ImageService from '../services/imageService'
 import * as fs from 'fs'
-import path from 'path'
-import sharp from 'sharp'
 
 const ImageCtrl = {
     imageGetAll: async (req: Request, res: Response) => {
@@ -28,30 +26,14 @@ const ImageCtrl = {
     },
 
     imageCreate: async (req: Request, res: Response) => {
-        const filename = req.query.filename as string
+        const imageName = req.query.filename as string
         const width = req.query.width as unknown as number
         const height = req.query.height as unknown as number
 
-        const editPath = path.resolve(`../images/${filename}-${width}-${height}.jpg`)
-
-        const image = await ImageService.changeImage(filename, width, height)
-
-        if (image) {
-            res.send(image)
-        } else {
-            res.status(404).json({ error: 'Image not found' })
-        }
-
-        console.log('ImageCreate', editPath)
-
-        sharp(editPath).toFile(editPath)
-
-        fs.readFile(editPath, (err, data) => {
-            if (err) {
-                console.log(err.message)
-            }
-            res.send(data)
-        })
+        const editPath = `../images/${imageName}-${width}x${height}`
+        const editedImage = await ImageService.resizeImage(editPath, imageName, width, height)
+        res.send(editedImage)
+        console.log('ImageCreate', imageName)
     },
 }
 
