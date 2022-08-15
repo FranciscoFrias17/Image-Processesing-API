@@ -5,7 +5,7 @@ import * as fs from 'fs'
 const ImageCtrl = {
     imageGetAll: async (req: Request, res: Response) => {
         const errors: Array<string> = []
-        fs.readdir(`../images`, (error, files) => {
+        fs.readdir(`./images`, (error, files) => {
             if (error) {
                 errors.push(error.message)
             }
@@ -16,7 +16,7 @@ const ImageCtrl = {
     imageGetOne: async (req: Request, res: Response) => {
         let error = ''
         const { id } = req.params
-        fs.readFile(`../images/${id}`, (err, data) => {
+        fs.readFile(`./images/${id}`, (err, data) => {
             if (err) {
                 error = err.message
             }
@@ -30,7 +30,7 @@ const ImageCtrl = {
         const width = req.query.width as unknown as number
         const height = req.query.height as unknown as number
 
-        const editPath = `../images/${imageName}-${width}x${height}`
+        const editPath = `./images/${imageName}-${width}x${height}`
         const editedImage = await ImageService.resizeImage(editPath, imageName, width, height)
         res.send(editedImage)
         console.log('ImageCreate', imageName)
