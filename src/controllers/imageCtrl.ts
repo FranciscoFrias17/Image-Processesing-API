@@ -10,6 +10,7 @@ const ImageCtrl = {
                 errors.push(error.message)
             }
             res.send(files)
+            // eslint-disable-next-line no-console, no-undef
             console.log('ImageGetAll', files)
         })
     },
@@ -22,6 +23,7 @@ const ImageCtrl = {
             }
             error ? res.status(404).json({ error }) : res.send(data)
         })
+        // eslint-disable-next-line no-console, no-undef
         console.log('ImageGetOne', id)
     },
 
@@ -30,9 +32,10 @@ const ImageCtrl = {
         const width = req.query.width ? parseInt(req.query.width as string) : 0
         const height = req.query.height ? parseInt(req.query.height as string) : 0
 
-        const editPath = `./images/${imageName}-${width}x${height}`
+        const editPath = `./images/${imageName}-${width}x${height}.jpg`
         const editedImage = await ImageService.resizeImage(editPath, imageName, width, height)
-        res.send(editedImage)
+        res.status(200).send(editedImage)
+        // eslint-disable-next-line no-console, no-undef
         console.log('ImageCreate', imageName)
     },
 }
