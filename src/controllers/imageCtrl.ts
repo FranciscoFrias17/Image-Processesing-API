@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import path from 'path'
 
 const ImageCtrl = {
-    imageGetAll: async (req: Request, res: Response) => {
+    imageGetAll: async (req: Request, res: Response): Promise<void> => {
         const errors: Array<string> = []
         fs.readdir(`./images`, (error, files) => {
             if (error) {
@@ -15,7 +15,7 @@ const ImageCtrl = {
             console.log('ImageGetAll', files)
         })
     },
-    imageGetOne: async (req: Request, res: Response) => {
+    imageGetOne: async (req: Request, res: Response): Promise<void> => {
         let error = ''
         const { id } = req.params
         fs.existsSync(`./images/${id}`) ? res.sendFile(path.resolve(`./images/${id}`)) : (error = 'Image not found')
@@ -26,15 +26,18 @@ const ImageCtrl = {
         console.log('ImageGetOne', id)
     },
 
-    imageCreate: async (req: Request, res: Response) => {
+    imageCreate: async (req: Request, res: Response): Promise<void> => {
         let error = ''
-        const imageName = req.params.id
-        const width = req.query.width ? parseInt(req.query.width as string) : 0
-        const height = req.query.height ? parseInt(req.query.height as string) : 0
+        const imageName: string = req.params.id
+        const width: number = req.query.width ? parseInt(req.query.width as string) : 0
+        const height: number = req.query.height ? parseInt(req.query.height as string) : 0
 
-        if (!imageName || !width || !height) {
-            error =
-                'Invalid parameters provided. Image name is required. Positive integers for width and height are required'
+        if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+            error = 'Invalid parameters provided. Positive integers for width and height are required'
+            res.status(400).send(error)
+        }
+        if (imageName.length === 0) {
+            error = 'Image name is required'
             res.status(400).send(error)
         } else {
             const editPath = path.resolve(`./images/${imageName}-${width}x${height}.jpg`)
