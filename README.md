@@ -4,7 +4,6 @@ An image resizing API using nodeJS and express
 
 ## Getting Started
 
-    change directory to src folder and install dependencies.
     $ npm install
     $ npm start
 
@@ -28,7 +27,7 @@ The API has the following endpoints:
 
     * /api/images/ - returns an array of all images in the images folder
     * /api/images/:id - returns the image with the given id
-    * /api/images/create/:id?width=:width&height=:height - resizes the named image with the given width and height
+    * /api/images/resize/:id?width=:width&height=:height - resizes the named image with the given width and height
 
     example api paths:
 

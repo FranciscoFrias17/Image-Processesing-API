@@ -64,6 +64,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var imageService_1 = __importDefault(require("../services/imageService"));
 var fs = __importStar(require("fs"));
+var path_1 = __importDefault(require("path"));
 var ImageCtrl = {
     imageGetAll: function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var errors;
@@ -85,33 +86,45 @@ var ImageCtrl = {
         return __generator(this, function (_a) {
             error = '';
             id = req.params.id;
-            fs.readFile("./images/".concat(id), function (err, data) {
-                if (err) {
-                    error = err.message;
-                }
-                error ? res.status(404).json({ error: error }) : res.send(data);
-            });
+            fs.existsSync("./images/".concat(id)) ? res.sendFile(path_1.default.resolve("./images/".concat(id))) : (error = 'Image not found');
+            if (error) {
+                res.status(404).send(error);
+            }
             // eslint-disable-next-line no-console, no-undef
             console.log('ImageGetOne', id);
             return [2 /*return*/];
         });
     }); },
     imageCreate: function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var imageName, width, height, editPath, editedImage;
+        var error, imageName, width, height, editPath, editedImage;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    error = '';
                     imageName = req.params.id;
                     width = req.query.width ? parseInt(req.query.width) : 0;
                     height = req.query.height ? parseInt(req.query.height) : 0;
-                    editPath = "./images/".concat(imageName, "-").concat(width, "x").concat(height, ".jpg");
-                    return [4 /*yield*/, imageService_1.default.resizeImage(editPath, imageName, width, height)];
+                    if (!(!imageName || !width || !height)) return [3 /*break*/, 1];
+                    error =
+                        'Invalid parameters provided. Image name is required. Positive integers for width and height are required';
+                    res.status(400).send(error);
+                    return [3 /*break*/, 3];
                 case 1:
-                    editedImage = _a.sent();
-                    res.status(200).send(editedImage);
+                    editPath = path_1.default.resolve("./images/".concat(imageName, "-").concat(width, "x").concat(height, ".jpg"));
+                    if (!!fs.existsSync(editPath)) return [3 /*break*/, 3];
                     // eslint-disable-next-line no-console, no-undef
                     console.log('ImageCreate', imageName);
-                    return [2 /*return*/];
+                    return [4 /*yield*/, imageService_1.default.resizeImage(editPath, imageName, width, height)];
+                case 2:
+                    editedImage = _a.sent();
+                    if (!editedImage) {
+                        error =
+                            'Invalid parameters provided. Image name is required. Positive integers for width and height are required';
+                        res.status(404).send(error);
+                    }
+                    res.status(200).sendFile(editPath);
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
             }
         });
     }); },
