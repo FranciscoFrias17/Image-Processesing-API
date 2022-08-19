@@ -35,10 +35,6 @@ const ImageCtrl = {
         if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
             error = 'Invalid parameters provided. Positive integers for width and height are required'
             res.status(400).send(error)
-        }
-        if (imageName.length === 0) {
-            error = 'Image name is required'
-            res.status(400).send(error)
         } else {
             const editPath = path.resolve(`./images/${imageName}-${width}x${height}.jpg`)
             if (!fs.existsSync(editPath)) {
