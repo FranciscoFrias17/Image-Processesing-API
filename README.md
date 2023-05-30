@@ -1,6 +1,6 @@
 # Image Processesing API
 
-An image resizing API using nodeJS and express. To resize images this api uses the Sharp Image library. Users can load images from the image folder and resize them via api endpoints in the address bar. 
+An image resizing API using nodeJS and express and typescript. To resize images this api uses the Sharp Image library. Users can load images from the image folder and resize them via api endpoints in the address bar. 
 
 ## Getting Started
 
